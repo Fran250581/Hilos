@@ -23,8 +23,11 @@ class MainActivity : AppCompatActivity() {
     fun calcularOperacion(view: View) {
         val n = Integer.parseInt(entrada!!.text.toString())
         salida!!.append(n.toString() + "! = ")
-        val res = factorial(n)
-        salida!!.append(res.toString() + "\n")
+        /*val res = factorial(n)
+        salida!!.append(res.toString() + "\n")*/
+
+        val thread = MiThread(n)
+        thread.start()
     }
 
     fun factorial(n: Int): Int {
@@ -35,5 +38,18 @@ class MainActivity : AppCompatActivity() {
         }
         return res
     }
+
+    internal inner class MiThread(private val n: Int) : Thread() {
+        private var res: Int = 0
+
+        override fun run() {
+            res = factorial(n)
+
+            runOnUiThread {
+                salida!!.append(res.toString() + "\n")
+            }
+        }
+    }
+
 }
 
