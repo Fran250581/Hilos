@@ -6,6 +6,7 @@ import android.os.SystemClock
 import android.view.View
 import android.widget.TextView
 import android.widget.EditText
+import android.os.AsyncTask
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,13 +27,16 @@ class MainActivity : AppCompatActivity() {
         /*val res = factorial(n)
         salida!!.append(res.toString() + "\n")*/
 
-        val thread = MiThread(n)
-        thread.start()
+        //val thread = MiThread(n)
+        //thread.start()
+
+        val tarea = MiTarea()
+        tarea.execute(n)
     }
 
-    fun factorial(n: Int): Int {
+    fun factorial(n: Int?): Int {
         var res = 1
-        for (i in 1..n) {
+        for (i in 1..n!!) {
             res *= i
             SystemClock.sleep(1000)
         }
@@ -48,6 +52,17 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 salida!!.append(res.toString() + "\n")
             }
+        }
+    }
+
+    internal inner class MiTarea : AsyncTask<Int, Void, Int>() {
+
+        override fun doInBackground(vararg n: Int?): Int {
+            return factorial(n!![0])
+        }
+
+        override fun onPostExecute(res: Int?) {
+            salida!!.append(res!!.toString() + "\n")
         }
     }
 
